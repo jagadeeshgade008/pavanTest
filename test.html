@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- add jquery and bootstrap latest cdns -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+
+    <!-- create a input field with id search and a button with id submit -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Search</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- <form action="search.php" method="post"> -->
+                                <div class="form-group">
+                                    <label for="search">Search</label>
+                                    <input type="text" class="form-control" id="search" name="search">
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="submit" name="submit">Submit</button>
+                                <!-- </form> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- create a div with  -->
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Results</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="updateDetailsContainer">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            var search = $("#search").val();
+            $.ajax({
+                url: "/apitocall",
+                method: "POST",
+                data: {
+                    search: search
+                },
+                success: function (data) {
+
+                    /*
+                        data is object with the following properties:
+                        data.status = "success" or "error"
+                        data.message = "message"
+                        data.data = {
+                            "id": "id",
+                            "name": "name",
+                            "email": "email",
+                            "phone": "phone",
+                            "address": "address",
+                            "city": "city",
+                            "state": "state",
+                            "zip": "zip",
+                            "country": "country",
+                            "company": "company",
+                            "position": "position",
+                            "website": "website",
+                            "linkedin": "linkedin",
+                            "facebook": "facebook",
+                            "twitter": "twitter",
+                            "instagram": "instagram",
+                            "youtube": "youtube",
+                            "notes": "notes"
+                        }
+                    */
+
+                    // prepare the object as inputs of the form with type as text
+
+                    var inputs = "";
+                    for (var key in data.data) {
+
+                        // each input is a div with class form-group and contains a label and input field with name as key and value as data[key] and with column of 6
+                        inputs += "<div class='form-group col-md-6'>" +
+                            "<label for='" + key + "'>" + key + "</label>" +
+                            "<input type='text' class='form-control' name='" +
+                            key + "' value='" + data.data[key] + "'>" +
+                            "</div>";
+
+                        // inputs += "<input type='text' class='form-control' name='" + key + "' value='" + data.data[
+                        //     key] + "'>";
+                    }
+
+                    // add update button
+                    inputs +=
+                        "<button type='submit' class='btn btn-primary' id='update' name='update'>Update</button>";
+
+                    // append the inputs to the form
+                    $("#updateDetailsContainer").append(inputs);
+
+                    $("#update").click(function () {
+                        var data = {};
+                        $("input").each(function () {
+                            data[$(this).attr("name")] = $(this).val();
+                        });
+                        console.log(data);
+
+                        // post data to api
+                        $.ajax({
+                            url: "/apitocall",
+                            method: "POST",
+                            data: data,
+                            success: function (data) {
+                                console.log(data);
+                            }
+                        });
+
+                    });
+
+                }
+            });
+        });
+    });
+
+
+    // For testing purposes uncomment the following lines
+    /*
+        $(document).ready(function () {
+        data = {}
+        data.status = "success"
+        data.message = "message"
+        data.data = {
+            "id": "id",
+            "name": "name",
+            "email": "email",
+            "phone": "phone",
+            "address": "address",
+            "city": "city",
+            "state": "state",
+            "zip": "zip",
+            "country": "country",
+            "company": "company",
+            "position": "position",
+            "website": "website",
+            "linkedin": "linkedin",
+            "facebook": "facebook",
+            "twitter": "twitter",
+            "instagram": "instagram",
+            "youtube": "youtube",
+            "notes": "notes"
+        }
+
+
+        // prepare the object as inputs of the form with type as text
+
+        var inputs = "";
+        for (var key in data.data) {
+
+            // each input is a div with class form-group and contains a label and input field with name as key and value as data[key] and with column of 6
+            inputs += "<div class='form-group col-md-6'>" +
+                "<label for='" + key + "'>" + key + "</label>" +
+                "<input type='text' class='form-control' name='" +
+                key + "' value='" + data.data[key] + "'>" +
+                "</div>";
+
+            // inputs += "<input type='text' class='form-control' name='" + key + "' value='" + data.data[
+            //     key] + "'>";
+        }
+
+        // add update button
+        inputs += "<button type='submit' class='btn btn-primary' id='update' name='update'>Update</button>";
+
+        // append the inputs to the form
+        $("#updateDetailsContainer").append(inputs);
+
+        $("#update").click(function () {
+            var data = {};
+            $("input").each(function () {
+                data[$(this).attr("name")] = $(this).val();
+            });
+            console.log(data);
+
+            // post data to api
+            $.ajax({
+                url: "/apitocall",
+                method: "POST",
+                data: data,
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+
+        });
+    });
+    */ 
+
+</script>
+
+
+</html>
