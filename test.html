@@ -8,19 +8,13 @@
     <title>Document</title>
 
     <!-- add jquery and bootstrap latest cdns -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <!-- import jquery -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+
 
 
 </head>
@@ -43,8 +37,18 @@
                                     <label for="search">Search</label>
                                     <input type="text" class="form-control" id="search" name="search">
                                 </div>
-                                <button type="submit" class="btn btn-primary" id="submit" name="submit">Submit</button>
+
                                 <!-- </form> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button id="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                                <!-- add insert & delete buttons -->
+                                <button id="insert" class="btn btn-primary">Insert</button>
+                                <button id="delete" class="btn btn-primary ml-3 d-none">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -54,7 +58,7 @@
     </div>
 
     <!-- create a div with  -->
-    <div class="container mt-3">
+    <div class="container mt-3 d-none" id="resultsContainer">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -79,39 +83,22 @@
     $(document).ready(function () {
         $("#submit").click(function () {
             var search = $("#search").val();
-            $.ajax({
+
+            if (search != "") {
+                $("#resultsContainer h3").text("Results");
+
+                // hide insert
+                $("#insert").addClass("d-none");
+                $("#delete").removeClass("d-none");
+
+                /*
+                $.ajax({
                 url: "/apitocall",
                 method: "POST",
                 data: {
                     search: search
                 },
                 success: function (data) {
-
-                    /*
-                        data is object with the following properties:
-                        data.status = "success" or "error"
-                        data.message = "message"
-                        data.data = {
-                            "id": "id",
-                            "name": "name",
-                            "email": "email",
-                            "phone": "phone",
-                            "address": "address",
-                            "city": "city",
-                            "state": "state",
-                            "zip": "zip",
-                            "country": "country",
-                            "company": "company",
-                            "position": "position",
-                            "website": "website",
-                            "linkedin": "linkedin",
-                            "facebook": "facebook",
-                            "twitter": "twitter",
-                            "instagram": "instagram",
-                            "youtube": "youtube",
-                            "notes": "notes"
-                        }
-                    */
 
                     // prepare the object as inputs of the form with type as text
 
@@ -138,7 +125,7 @@
 
                     $("#update").click(function () {
                         var data = {};
-                        $("input").each(function () {
+                        $("#resultsContainer input").each(function () {
                             data[$(this).attr("name")] = $(this).val();
                         });
                         console.log(data);
@@ -157,81 +144,239 @@
 
                 }
             });
+        
+            
+            */
+
+
+                $("#resultsContainer").removeClass("d-none");
+
+                data = {}
+                data.status = "success"
+                data.message = "message"
+                data.data = {
+                    "id": "id",
+                    "name": "name",
+                    "email": "email",
+                    "phone": "phone",
+                    "address": "address",
+                    "city": "city",
+                    "state": "state",
+                    "zip": "zip",
+                    "country": "country",
+                    "company": "company",
+                    "position": "position",
+                    "website": "website",
+                    "linkedin": "linkedin",
+                    "facebook": "facebook",
+                    "twitter": "twitter",
+                    "instagram": "instagram",
+                    "youtube": "youtube",
+                    "notes": "notes"
+                }
+
+
+                // prepare the object as inputs of the form with type as text
+
+                var inputs = "";
+
+                inputs += `<div class="col-12">`;
+                // add edit button
+                inputs += `
+                <div class="row justify-content-end">
+                    <button type='submit' class='btn btn-primary' id='edit' name='edit'>Edit</button>
+                </div>
+            `
+
+                inputs += "<div class='row'>";
+
+                for (var key in data.data) {
+
+                    // each input is a div with class form-group and contains a label and input field with name as key and value as data[key] and with column of 6 and make input disabled
+                    inputs += "<div class='form-group col-md-6'>" +
+                        "<label for='" + key + "'>" + key + "</label>" +
+                        "<input type='text' class='form-control' name='" +
+                        key + "' value='" + data.data[key] + "' disabled>" +
+                        "</div>";
+
+                    // inputs += "<input type='text' class='form-control' name='" + key + "' value='" + data.data[
+                    //     key] + "'>";
+                }
+
+                inputs += "</div>";
+                inputs += "</div>";
+
+                // add update button
+                inputs +=
+                    "<button type='submit' class='btn btn-primary d-none' id='update' name='update'>Update</button>";
+
+                // append the inputs to the form
+                $("#updateDetailsContainer").html(inputs);
+
+
+            }else{
+                alert("Please enter a search term");
+            }
+
         });
-    });
 
 
-    // For testing purposes uncomment the following lines
-    /*
-        $(document).ready(function () {
-        data = {}
-        data.status = "success"
-        data.message = "message"
-        data.data = {
-            "id": "id",
-            "name": "name",
-            "email": "email",
-            "phone": "phone",
-            "address": "address",
-            "city": "city",
-            "state": "state",
-            "zip": "zip",
-            "country": "country",
-            "company": "company",
-            "position": "position",
-            "website": "website",
-            "linkedin": "linkedin",
-            "facebook": "facebook",
-            "twitter": "twitter",
-            "instagram": "instagram",
-            "youtube": "youtube",
-            "notes": "notes"
-        }
+        // add delete button  
+        $("#delete").click(function () {
 
+            $("#insert").removeClass("d-none");
+            $("#delete").addClass("d-none");
 
-        // prepare the object as inputs of the form with type as text
-
-        var inputs = "";
-        for (var key in data.data) {
-
-            // each input is a div with class form-group and contains a label and input field with name as key and value as data[key] and with column of 6
-            inputs += "<div class='form-group col-md-6'>" +
-                "<label for='" + key + "'>" + key + "</label>" +
-                "<input type='text' class='form-control' name='" +
-                key + "' value='" + data.data[key] + "'>" +
-                "</div>";
-
-            // inputs += "<input type='text' class='form-control' name='" + key + "' value='" + data.data[
-            //     key] + "'>";
-        }
-
-        // add update button
-        inputs += "<button type='submit' class='btn btn-primary' id='update' name='update'>Update</button>";
-
-        // append the inputs to the form
-        $("#updateDetailsContainer").append(inputs);
-
-        $("#update").click(function () {
             var data = {};
-            $("input").each(function () {
+            $("#resultsContainer input").each(function () {
                 data[$(this).attr("name")] = $(this).val();
             });
             console.log(data);
 
+            // show alert notification in updateDetailsContainer container
+            $("#updateDetailsContainer").removeClass("d-none");
+            $("#updateDetailsContainer").html(`
+            <div class="col-md-4">
+                <div class="alert alert-danger" role="alert">
+                    <b>
+                        Document deleted successfully!!!
+                    </b>
+                </div>
+            </div>
+
+            `);
+
             // post data to api
-            $.ajax({
-                url: "/apitocall",
-                method: "POST",
-                data: data,
-                success: function (data) {
-                    console.log(data);
-                }
-            });
+            // $.ajax({
+            //     url: "/apitocall",
+            //     method: "POST",
+            //     data: data,
+            //     success: function (data) {
+            //         console.log(data);
+            //     }
+            // });
+        });
+
+
+        // add insert button
+        $('#insert').click(function () {
+            // $("#insert").addClass("d-none");
+            // $("#delete").removeClass("d-none");
+
+            $("#resultsContainer").removeClass("d-none");
+            $("#resultsContainer h3").text("Insert new document");
+
+            data = {
+                "id": "",
+                "name": "",
+                "email": "",
+                "phone": "",
+                "address": "",
+                "city": "",
+                "state": "",
+                "zip": "",
+                "country": "",
+                "company": "",
+                "position": "",
+                "website": "",
+                "linkedin": "",
+                "facebook": "",
+                "twitter": "",
+                "instagram": "",
+                "youtube": "",
+                "notes": ""
+            }
+
+
+            // prepare the object as inputs of the form with type as text
+
+            var inputs = "";
+            for (var key in data) {
+
+                // each input is a div with class form-group and contains a label and input field with name as key and value as data[key] and with column of 6
+                inputs += "<div class='form-group col-md-6'>" +
+                    "<label for='" + key + "'>" + key + "</label>" +
+                    "<input type='text' class='form-control' name='" +
+                    key + "' value='" + data[key] + "'>" +
+                    "</div>";
+
+                // inputs += "<input type='text' class='form-control' name='" + key + "' value='" + data.data[
+                //     key] + "'>";
+            }
+
+            // add update button
+            inputs +=
+                "<button type='submit' class='btn btn-primary' id='insertNewDocument' name='insert'>Insert</button>";
+
+            // append the inputs to the form
+            $("#updateDetailsContainer").html(inputs);
+
 
         });
-    });
-    */ 
 
+
+    });
+
+    $(document).on('click', "#insertNewDocument", function (e) {
+
+        // preapre the data to be sent to api
+        var data = {};
+        $("#resultsContainer input").each(function () {
+            data[$(this).attr("name")] = $(this).val();
+        });
+        console.log(data);
+
+        alert("Document inserted successfully");
+        window.location.reload();
+
+        // post data to api
+        $.ajax({
+            url: "/apitocall",
+            method: "POST",
+            data: data,
+            success: function (data) {
+                console.log(data);
+            }
+        });
+
+    })
+
+    $(document).on("click", "#edit", function (e) {
+        // $("#insert").addClass("d-none");
+        // $("#delete").removeClass("d-none");
+
+        // enable all the inputs
+        $("#resultsContainer input").each(function () {
+            $(this).removeAttr("disabled");
+        });
+
+        // show update button
+        $("#update").removeClass("d-none");
+
+    });
+
+    $(document).on("click", "#update", function (e) {
+        var data = {};
+        $("#resultsContainer input").each(function () {
+            data[$(this).attr("name")] = $(this).val();
+        });
+        console.log(data);
+
+        alert("Document updated successfully");
+
+        // post data to api
+        $.ajax({
+            url: "/apitocall",
+            method: "POST",
+            data: data,
+            success: function (data) {
+                console.log(data);
+            }
+        });
+
+    });
+
+    // For testing purposes uncomment the following lines
 </script>
 
 
