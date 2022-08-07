@@ -295,3 +295,41 @@
 
     });
 
+
+    $(document).ready(function() {
+
+        $("#search").autocomplete({
+
+            source:function(request, response) {
+
+                $.ajax({
+
+                    type:"GET",
+
+                    url:"https://localhost:44342/States/Search",
+
+                    data: { query: $("#search").val() },
+
+                    dataType:"json",
+
+                    contentType:"application/json; charset=utf-8",
+
+                    success:function(data) {
+                        console.log(data)
+                        response(data);
+
+                    },
+
+                    error:function(data) {
+
+                        alert("error found");
+
+                    }
+
+                });
+
+            }
+
+        });
+
+    });
